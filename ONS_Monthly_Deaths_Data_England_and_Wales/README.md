@@ -8,7 +8,7 @@ January 28, 2021
 
 ## Introduction
 
-This notebook shows how to use readxl package to retreive the Deaths registered monthly in England and Wales Dataset from [Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/datasets/monthlyfiguresondeathsregisteredbyareaofusualresidence) and create various plots to show the number of deaths with ggplots.
+This notebook shows how to use `readxl` package to retreive the *Deaths registered monthly in England and Wales* Dataset from [Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/datasets/monthlyfiguresondeathsregisteredbyareaofusualresidence) and create various plots to show the number of deaths with `ggplot2`.
 
 Source: [Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/datasets/monthlyfiguresondeathsregisteredbyareaofusualresidence)
 
