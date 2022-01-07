@@ -4,7 +4,7 @@ I-Hsuan Lin
 
 University of Manchester
 
-November 03, 2021
+January 07, 2022
 
 ## 1. Introduction
 
@@ -22,19 +22,21 @@ All the datasets are available from CRAN or bioconductor.
 
 
 ```R
-library(ggforce)
-library(pals)
-library(tidyverse)
+suppressMessages({
+    library(ggforce)
+    library(pals)
+    library(tidyverse)
 
-# To Run fission demo
-library(DESeq2)
-library(fission)
+    # To Run fission demo
+    library(DESeq2)
+    library(fission)
 
-# To Run PBMC demo
-library(scater)
-library(scran)
-library(bluster)
-library(TENxPBMCData)
+    # To Run PBMC demo
+    library(scater)
+    library(scran)
+    library(bluster)
+    library(TENxPBMCData)
+})
 ```
 
 ## 3. Set output parameters
@@ -45,7 +47,7 @@ library(TENxPBMCData)
 options(width = 110)
 
 # Set output image size
-options(repr.plot.width = 12, repr.plot.height = 8, repr.plot.res = 150)
+options(repr.plot.width = 12, repr.plot.height = 4, repr.plot.res = 150)
 ```
 
 ## 4. Load functions
@@ -55,6 +57,7 @@ The `plot_parallel` function allows users to create plots easily by providing th
 Optional settings are:
 - `labels`: vector of labels for the 2 categorical variables. Default values are `label1` and `label2`.
 - `add_counts`: boolean value showing if total counts of each element is displayed with the labels. Default value is `FALSE` (i.e. not showing counts).
+- `add_breakdown`: boolean value showing if detailed breakdown of the counts is displayed with the labels on both sides. Use `"left"`, `"right"`, `"both"` (same as `TRUE`) to control which side to show the breakdown. Default value is `FALSE` (i.e. not showing breakdown).
 - `text_size`: variable label size. Default value is 4.
 - `xlab_size`: main categorical label size. Default value is 14.
 - `base_size`: base font size, given in pts. Default value is 20.
@@ -62,8 +65,8 @@ Optional settings are:
 
 
 ```R
-plot_parallel <- function(lab1, lab2, labels = c("label1", "label2"), add_counts = FALSE, text_size = 4, 
-                          xlab_size = 14, base_size = 20, color = NULL) {
+plot_parallel <- function(lab1, lab2, labels = c("label1", "label2"), add_counts = FALSE, add_breakdown = FALSE, 
+                          text_size = 4, xlab_size = 14, base_size = 20, color = NULL) {
     if(length(lab1) == 0 | length(lab2) == 0) {
         return("Empty input.")
     }
@@ -81,17 +84,34 @@ plot_parallel <- function(lab1, lab2, labels = c("label1", "label2"), add_counts
         lab2 <- droplevels(lab2)
     }
     
+    lab1name <- levels(lab1)
+    lab2name <- levels(lab2)
+
     # Calculate and append counts to labels
     if(add_counts == TRUE) {
         lab1name <- data.frame(lab = lab1) %>% dplyr::count(lab) %>% 
             mutate(name = paste0(lab, " (", n, ")")) %>% pull(name)
-        levels(lab1) <- lab1name
-        
         lab2name <- data.frame(lab = lab2) %>% dplyr::count(lab) %>% 
             mutate(name = paste0(lab, " (", n, ")")) %>% pull(name)
-        levels(lab2) <- lab2name
     }
 
+    # Calculate and append detailed breakdown to labels
+    if(add_breakdown == TRUE | add_breakdown %in% c("both","left","right")) {
+        tab <- data.frame(table(lab1 = lab1, lab2 = lab2))
+        breakdown1 <- group_by(tab, lab1) %>% summarise_all(paste, collapse = ",") %>% pull(Freq)
+        breakdown2 <- group_by(tab, lab2) %>% summarise_all(paste, collapse = ",") %>% pull(Freq)
+
+        if(add_breakdown != "right") {
+            lab1name <- paste0(lab1name, "\n[", breakdown1, "]")        
+        }
+        if(add_breakdown != "left") {  
+            lab2name <- paste0(lab2name, "\n[", breakdown2, "]")
+        }
+    }
+
+    levels(lab1) <- lab1name
+    levels(lab2) <- lab2name
+    
     # Rename labels if duplicate names used in the 2 sets
     if(length(intersect(levels(lab1), levels(lab2))) > 0) {
         levels(lab1) <- paste0("(", labels[1], ") ", levels(lab1))
@@ -109,8 +129,8 @@ plot_parallel <- function(lab1, lab2, labels = c("label1", "label2"), add_counts
     
     # Build ggplot object
     p <- ggplot(data, aes(x, id = id, split = y, value = n)) +
-    geom_parallel_sets(aes(fill = lab1), alpha = 0.6, axis.width = 0.15) +
-    geom_parallel_sets_axes(aes(fill = y), color = "black", size = 0.3, axis.width = 0.1) +
+    geom_parallel_sets(aes(fill = lab1), alpha = 0.6, axis.width = 0.15) + # edge
+    geom_parallel_sets_axes(aes(fill = y), size = 0.3, axis.width = 0.1) + # annotation
     geom_text(aes(y = n, split = y), stat = "parallel_sets_axes",
               hjust = data_labels$hjust, nudge_x = data_labels$nudge_x,
               fontface = "bold", color = "black", size = text_size) +
@@ -119,7 +139,13 @@ plot_parallel <- function(lab1, lab2, labels = c("label1", "label2"), add_counts
           axis.text.x = element_text(face = "bold", color = "black", size = xlab_size))
 
     if(!is.null(color)) {
-        p <- p + scale_fill_manual(values = color)
+        num <- length(levels(data$y))
+        if(length(color) >= num) {
+            color <- color[1:num]
+            p <- p + scale_fill_manual(values = setNames(color, levels(data$y)))
+        } else {
+            print("Insufficient colours provided. Revert to default palette.")
+        }
     }
     
     return(p)
@@ -152,6 +178,20 @@ plot_parallel(dat$Class, dat$Age, labels = c("Class", "Age"))
 # Show class and age relationships of the passengers,
 # change colour and add number of passengers in each classification
 plot_parallel(dat$Class, dat$Age, labels = c("Class", "Age"), color = cols25(), add_counts = TRUE)
+```
+
+
+```R
+# Show class and age relationships of the passengers,
+# change colour and add breakdown of the number of passengers in each classification
+plot_parallel(dat$Class, dat$Age, labels = c("Class", "Age"), color = cols25(), add_breakdown = TRUE)
+```
+
+
+```R
+# Show class and age relationships of the passengers,
+# change colour and add total and breakdown of the number of passengers in each classification
+plot_parallel(dat$Class, dat$Age, labels = c("Class", "Age"), color = cols25(), add_counts = TRUE, add_breakdown = TRUE)
 ```
 
 ### Use `fission` dataset
@@ -228,9 +268,28 @@ plot_parallel(sig_strain, sig_time, labels = c("Strain", "Time"))
 
 
 ```R
+plot_parallel(sig_strain, sig_time, labels = c("Strain", "Time"), color = pals::cols25())
+```
+
+
+```R
 # Show relationships of the genes that have a significant strain and time effects,
 # change colour and add number of genes in each classification
 plot_parallel(sig_strain, sig_time, labels = c("Strain", "Time"), color = pals::cols25(), add_counts = TRUE)
+```
+
+
+```R
+# Show relationships of the genes that have a significant strain and time effects,
+# change colour and add breakdown of the genes in each classification
+plot_parallel(sig_strain, sig_time, labels = c("Strain", "Time"), color = pals::cols25(), add_breakdown = "both")
+```
+
+
+```R
+# Show relationships of the genes that have a significant strain and time effects,
+# change colour and add total and breakdown of the genes in each classification
+plot_parallel(sig_strain, sig_time, labels = c("Strain", "Time"), color = pals::cols25(), add_counts = TRUE, add_breakdown = "both")
 ```
 
 ### Use `TENxPBMCData` dataset
@@ -310,6 +369,12 @@ table(clu.walktrap, clu.louvain)
 
 
 ```R
+# Increase plot height
+options(repr.plot.height = 7)
+```
+
+
+```R
 # Show relationships of 2 different cluster assignments of cells
 plot_parallel(clu.walktrap, clu.louvain, labels = c("walktrap", "louvain"))
 ```
@@ -319,6 +384,26 @@ plot_parallel(clu.walktrap, clu.louvain, labels = c("walktrap", "louvain"))
 # Show relationships of 2 different cluster assignments of cells,
 # change colour and add number of cells in each classification
 plot_parallel(clu.walktrap, clu.louvain, labels = c("walktrap", "louvain"), color = glasbey(), add_counts = TRUE)
+```
+
+
+```R
+# Increase plot height
+options(repr.plot.height = 12)
+```
+
+
+```R
+# Show relationships of 2 different cluster assignments of cells,
+# change colour and add breakdown of the cells in "walktrap" classification
+plot_parallel(clu.walktrap, clu.louvain, labels = c("walktrap", "louvain"), color = glasbey(), add_breakdown = "left")
+```
+
+
+```R
+# Show relationships of 2 different cluster assignments of cells,
+# change colour and add breakdown of the cells in "louvain" classification
+plot_parallel(clu.walktrap, clu.louvain, labels = c("walktrap", "louvain"), color = glasbey(), add_breakdown = "right")
 ```
 
 ## Session info
