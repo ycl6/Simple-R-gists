@@ -4,16 +4,17 @@ I-Hsuan Lin
 
 University of Manchester
 
-February 26, 2021
+January 08, 2022
 
 ## 1. Introduction
 
-This notebook shows how to use `readxl` package to retreive the *Deaths registered monthly in England and Wales* Dataset from
-[Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/datasets/monthlyfiguresondeathsregisteredbyareaofusualresidence) and create various plots to show the number of deaths with `ggplot2`.
+This notebook shows how to use `readxl` package to retreive the *Deaths registered monthly in England and Wales* Dataset from [Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/datasets/monthlyfiguresondeathsregisteredbyareaofusualresidence) and create various plots to show the number of deaths with `ggplot2`.
+
+Source: [Office for National Statistics](https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/deaths/datasets/monthlyfiguresondeathsregisteredbyareaofusualresidence)
 
 ### About this dataset
 
-> Number of deaths registered each month by area of usual residence for England and Wales, by region, county, local and unitary authority, and London borough. These are monthly provisional data covering the month before release and do not include the most up-to-date figures on deaths registered involving the coronavirus (COVID-19); see our weekly deaths data.
+> Number of deaths registered each month by area of usual residence for England and Wales, by region, county, local and unitary authority, and London borough. These are monthly provisional data covering the month before release and do not include the most up-to-date figures on deaths registered involving coronavirus (COVID-19); see our weekly deaths data.
 
 ### Important notes and usage information
 
@@ -21,10 +22,11 @@ This notebook shows how to use `readxl` package to retreive the *Deaths register
 
 ### Main points from latest release
 
->- The provisional number of deaths registered in England and Wales in December 2020 was 56,614; this represents an increase of 5,340 deaths in comparison with the previous month and an increase of 9,238 deaths in comparison with the same month in 2019.
->- Moveable public holidays and the number of weekends, when register offices are closed, affect the number of registrations made in the published months and in the corresponding months in previous years.
->- Local authorities’ codes and names have been updated to reflect the changes that occurred in April 2020.
-
+>- In November 2021, there were 48,180 deaths registered in England, 6,511 deaths (15.6%) more than the November five-year average (2015 to 2019); there were 3,344 deaths registered in Wales, 557 deaths (20.0%) more than the November average.
+>- The leading cause of death in November 2021 was dementia and Alzheimer’s disease in England (accounting for 11.8% of all deaths) and ischaemic heart diseases in Wales (accounting for 10.7% of all deaths).
+>- Coronavirus (COVID-19) was the third leading cause of death in November 2021, in both England (accounting for 6.6% of all deaths) and Wales (accounting for 9.0% of all deaths).
+>- Taking into account the population size and age structure, the age-standardised mortality rate (ASMR) for deaths due to COVID-19 in England increased significantly to 69.3 deaths per 100,000 people; the ASMR for deaths due to COVID-19 in Wales was 106.4 deaths per 100,000 people, which was higher than October 2021 but was not statistically significant.
+>- Yorkshire and The Humber remained the English region with the highest ASMR for deaths due to COVID-19 in November 2021 (91.9 deaths per 100,000 people).
 
 ## 2. Loading required libraries
 
@@ -69,21 +71,24 @@ f2016 <- paste0(ons,"/2016/publishedoutput2016final.xls")
 f2017 <- paste0(ons,"/2017/publishedoutputannual2017final.xls")
 f2018 <- paste0(ons,"/2018/publishedannual2018.xls")
 f2019 <- paste0(ons,"/2019/annual2019publishedoutputrefresh.xls")
-f2020 <- paste0(ons,"/2020/publishedoutputdecember2020xls.xls")
+f2020 <- paste0(ons,"/2020/annual2020publishedoutputrefresh.xls")
+f2021 <- paste0(ons,"/2021/deathsregisteredmonthlyusualareaofresidenceenglandwales.xlsx")
 ```
 
 ### Download datasets
 
 
 ```R
-years <- 2006:2020
+years <- 2006:2021
 files <- c(f2006, f2007, f2008, f2009, f2010, f2011, f2012, f2013, 
-           f2014, f2015, f2016, f2017, f2018, f2019, f2020)
+           f2014, f2015, f2016, f2017, f2018, f2019, f2020, f2021)
+select <- "TOTAL REGISTRATIONS|ENGLAND, WALES AND ELSEWHERE"
+
 data <- data.frame(matrix(NA, nrow = 0, ncol = 12), stringsAsFactors = FALSE)
 
 for(i in 1:length(files)) {
     file <- files[i]
-    filename <- paste0("Y", years[i],".xls")
+    filename <- paste0("Y", years[i], ".", tools::file_ext(file))
     
     if(!file.exists(filename)) {
         # Download excel file using command line tool curl
@@ -91,20 +96,15 @@ for(i in 1:length(files)) {
     }
     
     # Pick relevant data row from the the selected sheet, and store as data.frame
-    if(years[i] > 2014) {
-        n <- read_excel(filename, sheet = paste0("Figures for ", years[i]), range = cell_rows(5:6), 
-                        .name_repair = "minimal")
-        n <- n[3:14] # 12-month data columns
-    } else if(years[i] < 2012) {
-        n <- read_excel(filename, sheet = paste0("Figures for ", years[i]), range = cell_rows(4:5), 
-                        .name_repair = "minimal")
-        n <- n[4:15] # 12-month data columns
-    } else {
-        n <- read_excel(filename, sheet = paste0("Figures for ", years[i]), range = cell_rows(5:6), 
-                        .name_repair = "minimal")
-        n <- n[4:15] # 12-month data columns
+    n <- read_excel(filename, sheet = paste0("Figures for ", years[i]),
+                        .name_repair =  ~ make.names(.x, unique = TRUE)) %>% rename(Contents = 1) %>% 
+    filter(grepl(select, X) | grepl(select, Contents)) %>% select_if(~any(grepl("^[0-9]+$", .)))
+    n <- as.numeric(n)
+    num <- length(n)
+    if(num < 12) {
+        n <- c(n, rep(NA, 12-num)) # Add NA if missing data
     }
-    data <- rbind(data, unlist(n))
+    data <- rbind(data, n)
 }
 ```
 
@@ -148,7 +148,7 @@ head(d)
 
 ```R
 total <- d %>% group_by(Year, Pre2020) %>%   # Group data by Year and Pre2020
-    summarise(Total = sum(Deaths), .groups = "drop")
+    summarise(Total = sum(Deaths, na.rm = TRUE), .groups = "drop")
 
 total
 ```
@@ -172,16 +172,11 @@ stat
 two_color <- c("cyan", "red")
 two_color <- setNames(two_color, c(TRUE, FALSE))
 
-line_color <- c(rep("cyan", length(years)-1), "red")
-line_color <- setNames(line_color, years)
-
-line_size <- c(rep(0.8, length(years)-1), 1.2)
-
-plot_title1 <- "Deaths registered yearly in England and Wales 2006 - 2020*"
-plot_title2 <- "Deaths registered monthly in England and Wales 2006 - 2020*"
+plot_title1 <- "Deaths registered yearly in England and Wales 2006 - 2021*"
+plot_title2 <- "Deaths registered monthly in England and Wales 2006 - 2021*"
 plot_subtitle <- "Area code: K04000001, J99000001"
 plot_caption <- "Dataset from Office for National Statistics
-                *Provisional number of deaths is provided for December 2020"
+                *Zero deaths is provided for December 2021"
 ```
 
 ### Show yearly total deaths
@@ -217,11 +212,11 @@ p
 
 
 ```R
-p <- ggplot(d, aes(Month, Deaths, group = Year, color = Year, size = Year)) + 
+p <- ggplot(d, aes(Month, Deaths, group = Year, color = Pre2020, size = Pre2020)) + 
     # Add line layer, then add point layer next
     geom_line() + geom_point(color = "black", size = 2) +
     scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3)) +
-    scale_color_manual(values = line_color) + scale_size_manual(values = line_size) +
+    scale_color_manual(values = two_color) + scale_size_manual(values = c(1.2, 0.8)) +
     theme_classic(base_size = 18) + labs(title = plot_title2, subtitle = plot_subtitle, caption = plot_caption)
 
 p
@@ -231,12 +226,12 @@ p
 
 
 ```R
-p <- ggplot(d, aes(Month, Deaths, group = Year, color = Year, size = Year)) + 
+p <- ggplot(d, aes(Month, Deaths, group = Year, color = Pre2020, size = Pre2020)) + 
     # Add smoothings as the bottom layer, followed by lines and then points
-    geom_smooth(data = d[d$Year != "2020",], fill = "darkgreen", alpha = 0.1, color = "darkgreen", size = 0.6) +
+    geom_smooth(data = d[grep("201", d$Year),], fill = "darkgreen", alpha = 0.1, color = "darkgreen", size = 0.6) +
     geom_line() + geom_point(color = "black", size = 2) + 
     scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3)) +
-    scale_color_manual(values = line_color) + scale_size_manual(values = line_size) +
+    scale_color_manual(values = two_color) + scale_size_manual(values = c(1.2, 0.8)) +
     theme_classic(base_size = 18) + labs(title = plot_title2, subtitle = plot_subtitle, caption = plot_caption)
 
 p
