@@ -4,7 +4,7 @@ I-Hsuan Lin
 
 University of Manchester
 
-January 08, 2022
+February 19, 2022
 
 ## Introduction
 
@@ -22,8 +22,6 @@ Source: [Office for National Statistics](https://www.ons.gov.uk/peoplepopulation
 
 ## Main points from latest release
 
->- In November 2021, there were 48,180 deaths registered in England, 6,511 deaths (15.6%) more than the November five-year average (2015 to 2019); there were 3,344 deaths registered in Wales, 557 deaths (20.0%) more than the November average.
->- The leading cause of death in November 2021 was dementia and Alzheimer’s disease in England (accounting for 11.8% of all deaths) and ischaemic heart diseases in Wales (accounting for 10.7% of all deaths).
->- Coronavirus (COVID-19) was the third leading cause of death in November 2021, in both England (accounting for 6.6% of all deaths) and Wales (accounting for 9.0% of all deaths).
->- Taking into account the population size and age structure, the age-standardised mortality rate (ASMR) for deaths due to COVID-19 in England increased significantly to 69.3 deaths per 100,000 people; the ASMR for deaths due to COVID-19 in Wales was 106.4 deaths per 100,000 people, which was higher than October 2021 but was not statistically significant.
->- Yorkshire and The Humber remained the English region with the highest ASMR for deaths due to COVID-19 in November 2021 (91.9 deaths per 100,000 people).
+>- The provisional number of deaths registered in England and Wales in December 2021 was 52,859; this represents an increase of 1,257 deaths in        comparison with the previous month and a decrease of 3,813 deaths in comparison with the same month in 2020.
+>- Moveable public holidays and the number of weekends, when register offices are closed, affect the number of registrations made in the published     months and in the corresponding months in previous years.
+>- Local authorities' codes and names have been updated to reflect the changes that occurred in April 2021.
