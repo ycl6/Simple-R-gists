@@ -4,7 +4,7 @@ I-Hsuan Lin
 
 University of Manchester
 
-June 20, 2021
+February 20, 2022
 
 ## Introduction
 
@@ -13,9 +13,14 @@ This notebook shows how to use `readxl` package to retreive the *Monthly COVID-1
 
 ## About this dataset
 
-This publication shows the number of vaccinations given to people in England who are eligible for vaccination (individuals who have an NHS number and are currently alive in the resident population). This data covers vaccinations administered up to midnight of the last day of each month.
+The majority of the figures in this publication provide information on individuals who are eligible for vaccination (those who have an NHS number and are currently alive) who have been vaccinated for     COVID-19 in England or who live in England but have been vaccinated for COVID-19 outside of England.
 
-- **Period**: 8th December 2020 to 31st May 2021
-- **Source**: National Immunisation Management Service (NIMS)
-- **Published**: 10th June 2021
+The publication also includes figures based on all vaccinations administered in England, even if individuals vaccinated are resident outside of England, do not have an NHS number or are no longer alive.
+
+All data in the monthly publication covers vaccinations administered up to midnight of the last day of the previous month.
+
+- **Period**: 8th December 2020 to 31st January 2022
+- **Source**: National Immunisation Management System (NIMS)
+- **Basis**: England
+- **Published**: 10th February 2022
 
