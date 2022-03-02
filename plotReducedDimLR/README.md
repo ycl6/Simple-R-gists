@@ -303,8 +303,8 @@ plot_grid(p1, p2, nrow = 1)
 ### Show cells coloured by CD40LG and CD40 expression
 
 The **CD40LG-CD40** is one of the well-characterised ligand-receptor
-pairs between T cells and B cells.
-[ref](https://pubmed.ncbi.nlm.nih.gov/19426221/)
+pairs between T cells and B cells
+([ref](https://pubmed.ncbi.nlm.nih.gov/19426221/)).
 
 -   The CD40LG (also known as CD154 or CD40L) encodes the CD40 ligand
     that is predominantly expressed in activated T cells. \[**walktrap
@@ -334,7 +334,7 @@ plot_grid(p1, p2, nrow = 1)
 
 #### Labelled by cluster assignment
 
--   Use `text_by` to add labels.
+-   Use `text_by` to add `walktrap` cluster labels.
 
 ``` r
 plotReducedDimLR(sce.pbmc, "TSNE", c("CD40LG","CD40"), text_by = "walktrap")
@@ -366,8 +366,8 @@ plotReducedDimLR(sce.pbmc, "TSNE", c("CD40LG","CD40"), text_by = "walktrap",
 
 #### Show expression of 2 genes (not necessary a LR pair)
 
--   Use `lr_desc` to change legend title.
--   Use `lr_sep` to change how the genes are separated in title.
+-   Use `lr_desc` to change legend titles.
+-   Use `lr_sep` to change how the genes are separated in plot title.
 
 ``` r
 plotReducedDimLR(sce.pbmc, "TSNE", c("MS4A1","NKG7"), lr_desc = c("B cell","NK cell"), 
