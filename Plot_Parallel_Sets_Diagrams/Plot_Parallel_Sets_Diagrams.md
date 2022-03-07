@@ -4,7 +4,7 @@ I-Hsuan Lin
 
 University of Manchester
 
-January 07, 2022
+March 07, 2022
 
 ## 1. Introduction
 
@@ -47,7 +47,7 @@ suppressMessages({
 options(width = 110)
 
 # Set output image size
-options(repr.plot.width = 12, repr.plot.height = 4, repr.plot.res = 150)
+options(repr.plot.width = 12, repr.plot.height = 5, repr.plot.res = 150)
 ```
 
 ## 4. Load functions
@@ -66,7 +66,7 @@ Optional settings are:
 
 ```R
 plot_parallel <- function(lab1, lab2, labels = c("label1", "label2"), add_counts = FALSE, add_breakdown = FALSE, 
-                          text_size = 4, xlab_size = 14, base_size = 20, color = NULL) {
+                          text_size = 4, xlab_size = 14, base_size = 18, color = NULL) {
     if(length(lab1) == 0 | length(lab2) == 0) {
         return("Empty input.")
     }
@@ -139,10 +139,13 @@ plot_parallel <- function(lab1, lab2, labels = c("label1", "label2"), add_counts
           axis.text.x = element_text(face = "bold", color = "black", size = xlab_size))
 
     if(!is.null(color)) {
-        num <- length(levels(data$y))
-        if(length(color) >= num) {
+        all_lab <- levels(data$y)
+        num <- length(all_lab)
+        if(sum(all_lab %in% names(color)) == num) { # if all labels can be found in the named colour vector
+            p <- p + scale_fill_manual(values = color[all_lab])
+        } else if(length(color) >= num) {
             color <- color[1:num]
-            p <- p + scale_fill_manual(values = setNames(color, levels(data$y)))
+            p <- p + scale_fill_manual(values = setNames(color, all_lab))
         } else {
             print("Insufficient colours provided. Revert to default palette.")
         }
