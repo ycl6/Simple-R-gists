@@ -1,7 +1,7 @@
-#' Plot reduced dimensions
+#' Plot ligand-receptor gene expression in reduced dimensions
 #'
-#' Plot gene expression on low-dimensional projections stored in a 
-#' SingleCellExperiment object.
+#' Plot ligand and receptor gene expression on low-dimensional projections 
+#' stored in a SingleCellExperiment object.
 #'
 #' @title plotReducedDimLR
 #' @param object A \code{SingleCellExperiment} object.
