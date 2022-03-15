@@ -27,6 +27,7 @@ Loading required libraries
 --------------------------
 
 ``` r
+library(scales)
 library(cowplot)
 library(ggrepel)
 library(ggnewscale)
@@ -61,36 +62,37 @@ The `plotReducedDimLR` function allows users to create UMAP and t-SNE
 plots that show expression of a ligand-receptor pair. The required
 arguments to use the function are `object`, `dimred` and `lr_pair`.
 
--   `object`: a `SingleCellExperiment` object.
--   `dimred`: a string or integer scalar indicating the reduced
+-   `object`: A `SingleCellExperiment` object.
+-   `dimred`: A string or integer scalar indicating the reduced
     dimension result in `reducedDims(object)` to plot.
--   `lr_pair`: a character vector of length 2 containing the ligand and
+-   `lr_pair`: A character vector of length 2 containing the ligand and
     receptor gene symbol.
--   `lr_desc`: a character vector of length 2 containing short
-    description to change legend title. Default:
-    `c("Ligand","Receptor")`.
--   `lr_color`: a character vector of length 2 containing colour
-    aesthetics. Default: `c("blue","red")`.
--   `lr_sep`: a character string to define how the 2 genes terms are
-    separated. Default: “-”.
+-   `lr_desc`: A character vector of length 2 containing short
+    description to change legend title. (default:
+    `c("Ligand","Receptor")`)
+-   `lr_color`: A character vector of length 2 containing colour
+    aesthetics. (default: `c("blue","red")`)
+-   `lr_sep`: A character string to define how the 2 genes terms are
+    separated. (default: “-”)
 -   `oneplot`: Logical scalar indicating whether to overlay expressions
-    in a single plot or generate 2 side-by-side plots. Default: TRUE.
--   `by_exprs_values`: a string or integer scalar specifying which assay
+    in a single plot or generate 2 side-by-side plots. (default: TRUE)
+-   `by_exprs_values`: A string or integer scalar specifying which assay
     to obtain expression values from, for use in point aesthetics.
-    Default: “logcounts”.
--   `point_size`: a numeric scalar specifying the size of the points.
-    Default: 2.
--   `point_alpha`: a numeric scalar (between 0 and 1) specifying the
-    transparency. Default: 0.4.
--   `point_shape`: an integer scalar (between 0 and 25) specifying the
-    shape aesthetics. Default: 16.
--   `text_by`: a string specifying the column metadata field with which
-    to add text labels on the plot.
--   `text_size`: a numeric scalar specifying the size of added text.
-    Default: 8.
--   `text_colour`: a string specifying the colour of the added text.
-    Default: “black”.
--   `theme_size`: base font size. Default: 14.
+    (default: “logcounts”)
+-   `point_size`: A numeric scalar specifying the size of the points.
+    (default: 2)
+-   `point_alpha`: A numeric scalar (between 0 and 1) specifying the
+    transparency. (default: 0.4)
+-   `point_shape`: An integer scalar (between 0 and 25) specifying the
+    shape aesthetics. (default: 16)
+-   `text_by`: A string specifying the column metadata field with which
+    to add text labels on the plot. (default: NULL)
+-   `text_size`: A numeric scalar specifying the size of added text.
+    (default: 8)
+-   `text_color`: A string specifying the color of the added text.
+    (default: “black”)
+-   `theme_size`: A numeric scalar specifying the base font size.
+    (default: 14)
 
 **Function 2: `add_label`**
 
@@ -99,15 +101,15 @@ the `scater` package (wll be fixed in scater v1.23.5). It allows the
 added labels to be placed centrally in each cluster. The required
 arguments to use the function are `object` and `dimred`.
 
--   `object`: a `SingleCellExperiment` object.
--   `dimred`: a string or integer scalar indicating the reduced
+-   `object`: A `SingleCellExperiment` object.
+-   `dimred`: A string or integer scalar indicating the reduced
     dimension result in `reducedDims(object)` to plot.
--   `text_by`: a string specifying the column metadata field with which
-    to add text labels on the plot. Default: “label”.
--   `text_size`: a numeric scalar specifying the size of added text.
-    Default: 8.
--   `text_colour`: a string specifying the colour of the added text.
-    Default: “black”.
+-   `text_by`: A string specifying the column metadata field with which
+    to add text labels on the plot. (default: “label”)
+-   `text_size`: A numeric scalar specifying the size of added text.
+    (default: 8)
+-   `text_color`: A string specifying the colour of the added text.
+    (default: “black”)
 
 Prepare the `pbmc4k` dataset
 ----------------------------
@@ -413,7 +415,7 @@ Click to expand
     ## [16] GenomeInfoDb_1.30.1         IRanges_2.28.0              S4Vectors_0.32.3           
     ## [19] BiocGenerics_0.40.0         MatrixGenerics_1.6.0        matrixStats_0.61.0         
     ## [22] ggnewscale_0.4.6            ggrepel_0.9.1               ggplot2_3.3.5              
-    ## [25] cowplot_1.1.1               knitr_1.37                 
+    ## [25] cowplot_1.1.1               scales_1.1.1                knitr_1.37                 
     ## 
     ## loaded via a namespace (and not attached):
     ##   [1] Rtsne_0.15                    ggbeeswarm_0.6.0              colorspace_2.0-3             
@@ -434,22 +436,22 @@ Click to expand
     ##  [46] xfun_0.29                     stringr_1.4.0                 beachmat_2.10.0              
     ##  [49] mime_0.12                     lifecycle_1.0.1               irlba_2.3.5                  
     ##  [52] statmod_1.4.36                AnnotationHub_3.2.1           edgeR_3.36.0                 
-    ##  [55] zlibbioc_1.40.0               scales_1.1.1                  promises_1.2.0.1             
-    ##  [58] parallel_4.1.2                yaml_2.3.5                    curl_4.3.2                   
-    ##  [61] memoise_2.0.1                 gridExtra_2.3                 stringi_1.7.6                
-    ##  [64] RSQLite_2.2.10                highr_0.9                     BiocVersion_3.14.0           
-    ##  [67] ScaledMatrix_1.2.0            filelock_1.0.2                BiocParallel_1.28.3          
-    ##  [70] rlang_1.0.1                   pkgconfig_2.0.3               bitops_1.0-7                 
-    ##  [73] evaluate_0.15                 lattice_0.20-45               Rhdf5lib_1.16.0              
-    ##  [76] purrr_0.3.4                   labeling_0.4.2                bit_4.0.4                    
-    ##  [79] tidyselect_1.1.2              RcppAnnoy_0.0.19              magrittr_2.0.2               
-    ##  [82] R6_2.5.1                      generics_0.1.2                metapod_1.2.0                
-    ##  [85] DBI_1.1.2                     pillar_1.7.0                  withr_2.4.3                  
-    ##  [88] KEGGREST_1.34.0               RCurl_1.98-1.6                tibble_3.1.6                 
-    ##  [91] crayon_1.5.0                  utf8_1.2.2                    BiocFileCache_2.2.1          
-    ##  [94] rmarkdown_2.11                viridis_0.6.2                 locfit_1.5-9.4               
-    ##  [97] grid_4.1.2                    blob_1.2.2                    digest_0.6.29                
-    ## [100] xtable_1.8-4                  httpuv_1.6.5                  munsell_0.5.0                
-    ## [103] beeswarm_0.4.0                viridisLite_0.4.0             vipor_0.4.5
+    ##  [55] zlibbioc_1.40.0               promises_1.2.0.1              parallel_4.1.2               
+    ##  [58] yaml_2.3.5                    curl_4.3.2                    memoise_2.0.1                
+    ##  [61] gridExtra_2.3                 stringi_1.7.6                 RSQLite_2.2.10               
+    ##  [64] highr_0.9                     BiocVersion_3.14.0            ScaledMatrix_1.2.0           
+    ##  [67] filelock_1.0.2                BiocParallel_1.28.3           rlang_1.0.1                  
+    ##  [70] pkgconfig_2.0.3               bitops_1.0-7                  evaluate_0.15                
+    ##  [73] lattice_0.20-45               Rhdf5lib_1.16.0               purrr_0.3.4                  
+    ##  [76] labeling_0.4.2                bit_4.0.4                     tidyselect_1.1.2             
+    ##  [79] RcppAnnoy_0.0.19              magrittr_2.0.2                R6_2.5.1                     
+    ##  [82] generics_0.1.2                metapod_1.2.0                 DBI_1.1.2                    
+    ##  [85] pillar_1.7.0                  withr_2.4.3                   KEGGREST_1.34.0              
+    ##  [88] RCurl_1.98-1.6                tibble_3.1.6                  crayon_1.5.0                 
+    ##  [91] utf8_1.2.2                    BiocFileCache_2.2.1           rmarkdown_2.11               
+    ##  [94] viridis_0.6.2                 locfit_1.5-9.4                grid_4.1.2                   
+    ##  [97] blob_1.2.2                    digest_0.6.29                 xtable_1.8-4                 
+    ## [100] httpuv_1.6.5                  munsell_0.5.0                 beeswarm_0.4.0               
+    ## [103] viridisLite_0.4.0             vipor_0.4.5
 
 </details>
