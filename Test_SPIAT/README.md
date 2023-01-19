@@ -15,14 +15,14 @@ SPIAT (**Sp**atial **I**mage **A**nalysis of **T**issues) is an R package with a
 
 **Content**
 
-0. <a href="/README.md#0-Prepare-workspace">Prepare workspace</a>
-1. <a href="/README.md#1-Reading-in-data-and-data-formatting-in-SPIAT">Reading in data and data formatting in SPIAT</a>
-2. <a href="/README.md#2-Quality-control-and-visualisation-with-SPIAT">Quality control and visualisation with SPIAT</a>
-3. <a href="/README.md#3-Basic-analyses-with-SPIAT">Basic analyses with SPIAT</a>
-4. <a href="/README.md#4-Quantifying-cell-colocalisation-with-SPIAT">Quantifying cell colocalisation with SPIAT</a>
-5. <a href="/README.md#5-Spatial-heterogeneity-with-SPIAT">Spatial heterogeneity with SPIAT</a>
-6. <a href="/README.md#6-Characterising-tissue-structure-with-SPIAT">Characterising tissue structure with SPIAT</a>
-7. <a href="/README.md#7-Identifying-cellular-neighborhood-with-SPIAT">Identifying cellular neighborhood with SPIAT</a>
+0. <a href="README.md#0-Prepare-workspace">Prepare workspace</a>
+1. <a href="README.md#1-Reading-in-data-and-data-formatting-in-SPIAT">Reading in data and data formatting in SPIAT</a>
+2. <a href="README.md#2-Quality-control-and-visualisation-with-SPIAT">Quality control and visualisation with SPIAT</a>
+3. <a href="README.md#3-Basic-analyses-with-SPIAT">Basic analyses with SPIAT</a>
+4. <a href="README.md#4-Quantifying-cell-colocalisation-with-SPIAT">Quantifying cell colocalisation with SPIAT</a>
+5. <a href="README.md#5-Spatial-heterogeneity-with-SPIAT">Spatial heterogeneity with SPIAT</a>
+6. <a href="README.md#6-Characterising-tissue-structure-with-SPIAT">Characterising tissue structure with SPIAT</a>
+7. <a href="README.md#7-Identifying-cellular-neighborhood-with-SPIAT">Identifying cellular neighborhood with SPIAT</a>
 
 # 0. Prepare workspace
 
